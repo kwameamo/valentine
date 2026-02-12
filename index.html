@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 50%, #fff0f8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Page 1 - Question */
+        .question-page {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .heart {
+            font-size: 100px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 5px 20px rgba(255, 143, 171, 0.4));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            color: #2d2d2d;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #ff8fab;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+            color: white;
+        }
+
+        .yes-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 143, 171, 0.4);
+        }
+
+        .no-btn {
+            background: transparent;
+            color: #ff8fab;
+        }
+
+        .no-btn:hover {
+            background: rgba(255, 143, 171, 0.1);
+        }
+
+        /* Page 2 - Cake */
+        .cake-page {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .cake-message {
+            font-size: 1.3rem;
+            color: #2d2d2d;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .cake-image {
+            width: 100%;
+            max-width: 450px;
+            height: 450px;
+            border-radius: 20px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            background: white;
+            overflow: hidden;
+        }
+
+        .cake-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .continue-btn {
+            background: transparent;
+            color: #ff8fab;
+            border: 2px solid #ff8fab;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .continue-btn:hover {
+            background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 143, 171, 0.4);
+        }
+
+        /* Page 3 - Poetry */
+        .poetry-page {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .falling-images {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .falling-image {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: fall linear forwards;
+            opacity: 0;
+            overflow: hidden;
+            background: white;
+        }
+
+        .falling-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -150px;
+                opacity: 0;
+                transform: rotate(0deg);
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.9;
+            }
+            100% {
+                top: calc(100vh + 150px);
+                opacity: 0;
+                transform: rotate(360deg);
+            }
+        }
+
+        .poetry-content {
+            background: white;
+            padding: 3.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .poem {
+            color: #2d2d2d;
+            font-size: 1.2rem;
+            line-height: 2.2;
+            text-align: center;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        .poem-line {
+            margin-bottom: 0.3rem;
+        }
+
+        .stanza {
+            margin-bottom: 2rem;
+        }
+
+        .signature {
+            text-align: right;
+            font-size: 1rem;
+            color: #ff8fab;
+            margin-top: 2.5rem;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+            max-width: 400px;
+            margin: 2rem;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-text {
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .modal-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .close-modal-btn {
+            background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .close-modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 143, 171, 0.4);
+        }
+
+        /* Images only view */
+        .images-only {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .images-only.active {
+            display: flex;
+        }
+
+        .images-only-text {
+            position: relative;
+            z-index: 10;
+            color: #2d2d2d;
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .back-to-poem-btn {
+            background: white;
+            color: #ff8fab;
+            border: 2px solid #ff8fab;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .back-to-poem-btn:hover {
+            background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 143, 171, 0.4);
+        }
+
+        .cute-btn {
+            background: white;
+            color: #ff8fab;
+            border: 2px solid #ff8fab;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-top: 2rem;
+        }
+
+        .cute-btn:hover {
+            background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 143, 171, 0.4);
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 100px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .music-player:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 0;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .music-label {
+            font-size: 0.9rem;
+            color: #2d2d2d;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .music-player {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.8rem 1.2rem;
+            }
+
+            .music-label {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .cake-image {
+                height: 350px;
+            }
+            
+            .poem {
+                font-size: 1.05rem;
+            }
+
+            .poetry-content {
+                padding: 2.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="raindance.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Player Control -->
+    <div class="music-player">
+        <button class="music-toggle" id="musicToggle" onclick="toggleMusic()">🔇</button>
+        <span class="music-label">Music</span>
+    </div>
+
+    <!-- Modal for "Try Again" -->
+    <div class="modal" id="tryAgainModal">
+        <div class="modal-content">
+            <div class="modal-emoji">😂</div>
+            <div class="modal-text">lmao try again</div>
+            <button class="close-modal-btn" onclick="closeModal()">Okay, okay</button>
+        </div>
+    </div>
+
+    <!-- Page 1: Question -->
+    <div class="page question-page active">
+        <div class="heart">💕</div>
+        <div class="question-text">
+            I know we're not on the best terms right now, but I'm asking anyway...<br><br>
+            Would you be my Valentine?
+        </div>
+        <div class="buttons">
+            <button class="yes-btn" onclick="showCakePage()">Yes</button>
+            <button class="no-btn" onclick="tryAgain()">No</button>
+        </div>
+    </div>
+
+    <!-- Page 2: Cake -->
+    <div class="page cake-page">
+        <div class="cake-message">
+            I went to your favorite cake maker to have this made for you...<br>
+            It's beautiful, and I just know you're going to love it.
+        </div>
+        <div class="cake-image">
+            <!-- REPLACE THE URL BELOW WITH YOUR CAKE IMAGE -->
+            <img src="cake.png?w=800&h=800&fit=crop" alt="Beautiful Cake">
+        </div>
+        <button class="continue-btn" onclick="showPoetryPage()">Continue</button>
+    </div>
+
+    <!-- Page 3: Poetry with Falling Images -->
+    <div class="page poetry-page">
+        <div class="falling-images" id="fallingImages"></div>
+        
+        <div class="poetry-content">
+            <div class="poem">
+                <div class="stanza">
+                    <div class="poem-line">In moments soft, when hearts align,</div>
+                    <div class="poem-line">I find myself drawn back to you,</div>
+                    <div class="poem-line">Through every storm, through every sign,</div>
+                    <div class="poem-line">My heart knows what it wants to do.</div>
+                </div>
+                
+                <div class="stanza">
+                    <div class="poem-line">Though words were lost and paths diverged,</div>
+                    <div class="poem-line">And silence filled the space between,</div>
+                    <div class="poem-line">A deeper truth has now emerged—</div>
+                    <div class="poem-line">You're the most beautiful I've ever seen.</div>
+                </div>
+                
+                <div class="stanza">
+                    <div class="poem-line">So here I stand with open heart,</div>
+                    <div class="poem-line">Hoping you might feel it too,</div>
+                    <div class="poem-line">That maybe we could make a start,</div>
+                    <div class="poem-line">And write our story, me and you.</div>
+                </div>
+            </div>
+            <div class="signature">Forever Yours</div>
+            <button class="cute-btn" onclick="showImagesOnly()">Ain't we cute?!</button>
+        </div>
+    </div>
+
+    <!-- Images Only View -->
+    <div class="images-only" id="imagesOnly">
+        <div class="falling-images" id="fallingImages2"></div>
+        <div class="images-only-text">💕</div>
+        <button class="back-to-poem-btn" onclick="backToPoem()">Back to poem</button>
+    </div>
+
+    <script>
+        // Image URLs for falling photos - REPLACE THESE WITH YOUR ACTUAL PHOTO URLS
+        const photoUrls = [
+            '1.webp?w=400&h=400&fit=crop',
+            '2.webp?w=400&h=400&fit=crop',
+            '3.webp?w=400&h=400&fit=crop',
+            '4.webp?w=400&h=400&fit=crop',
+            '5.webp?w=400&h=400&fit=crop',
+            '6.webp?w=400&h=400&fit=crop',
+            '7.webp?w=400&h=400&fit=crop',
+            '8.webp?w=400&h=400&fit=crop',
+            '9.webp?w=400&h=400&fit=crop',
+            '10.webp?w=400&h=400&fit=crop',
+            '11.webp?w=400&h=400&fit=crop',
+            '12.webp?w=400&h=400&fit=crop',
+            '13.webp?w=400&h=400&fit=crop'
+        ];
+
+        // Music control
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicToggle.textContent = '🔇';
+                isPlaying = false;
+            } else {
+                bgMusic.play().catch(error => {
+                    console.log('Playback failed:', error);
+                });
+                musicToggle.textContent = '🔊';
+                isPlaying = true;
+            }
+        }
+
+        // Auto-play music when user interacts (browser requirement)
+        document.addEventListener('click', function initAudio() {
+            if (!isPlaying) {
+                bgMusic.play().catch(error => {
+                    console.log('Auto-play prevented:', error);
+                });
+                musicToggle.textContent = '🔊';
+                isPlaying = true;
+            }
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+
+        function showCakePage() {
+            document.querySelector('.question-page').classList.remove('active');
+            document.querySelector('.cake-page').classList.add('active');
+        }
+
+        function showPoetryPage() {
+            document.querySelector('.cake-page').classList.remove('active');
+            document.querySelector('.poetry-page').classList.add('active');
+            startFallingImages();
+        }
+
+        function tryAgain() {
+            document.getElementById('tryAgainModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('tryAgainModal').classList.remove('active');
+        }
+
+        function showImagesOnly() {
+            document.querySelector('.poetry-page').classList.remove('active');
+            document.getElementById('imagesOnly').classList.add('active');
+            startFallingImages2();
+        }
+
+        function backToPoem() {
+            document.getElementById('imagesOnly').classList.remove('active');
+            document.querySelector('.poetry-page').classList.add('active');
+        }
+
+        function startFallingImages() {
+            const container = document.getElementById('fallingImages');
+            startFalling(container);
+        }
+
+        function startFallingImages2() {
+            const container = document.getElementById('fallingImages2');
+            startFalling(container);
+        }
+
+        function startFalling(container) {
+            // Clear any existing images
+            container.innerHTML = '';
+            
+            function createFallingImage() {
+                const img = document.createElement('div');
+                img.className = 'falling-image';
+                
+                const randomPhoto = photoUrls[Math.floor(Math.random() * photoUrls.length)];
+                img.innerHTML = `<img src="${randomPhoto}" alt="Memory">`;
+                
+                const leftPosition = Math.random() * 85;
+                const duration = 10 + Math.random() * 6;
+                const delay = Math.random() * 3;
+                const size = 100 + Math.random() * 60;
+                
+                img.style.left = leftPosition + '%';
+                img.style.width = size + 'px';
+                img.style.height = size + 'px';
+                img.style.animationDuration = duration + 's';
+                img.style.animationDelay = delay + 's';
+                
+                container.appendChild(img);
+                
+                setTimeout(() => {
+                    img.remove();
+                }, (duration + delay) * 1000);
+            }
+            
+            // Create initial batch
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => createFallingImage(), i * 1200);
+            }
+            
+            // Continue creating images
+            setInterval(createFallingImage, 3000);
+        }
+    </script>
+</body>
+</html>
