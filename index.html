@@ -519,8 +519,12 @@
             It's beautiful, and I just know you're going to love it.
         </div>
         <div class="cake-image">
-            <!-- REPLACE THE URL BELOW WITH YOUR CAKE IMAGE -->
-            <img src="cake.png?w=800&h=800&fit=crop" alt="Beautiful Cake">
+            <!-- REPLACE THE URL BELOW WITH YOUR CAKE VIDEO -->
+            <video id="cakeVideo" autoplay muted loop playsinline preload="auto">
+                <source src="cake.mp4" type="video/mp4">
+                <source src="cake.webm" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
         </div>
         <button class="continue-btn" onclick="showPoetryPage()">Continue</button>
     </div>
@@ -616,6 +620,14 @@
         function showCakePage() {
             document.querySelector('.question-page').classList.remove('active');
             document.querySelector('.cake-page').classList.add('active');
+            
+            // Ensure video plays when page is shown
+            const cakeVideo = document.getElementById('cakeVideo');
+            if (cakeVideo) {
+                cakeVideo.play().catch(error => {
+                    console.log('Video autoplay failed:', error);
+                });
+            }
         }
 
         function showPoetryPage() {
